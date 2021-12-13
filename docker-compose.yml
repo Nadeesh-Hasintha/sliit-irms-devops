@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+  node-js-jwt-auth:
+    build: ./node-js-jwt-auth
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    environment:
+      - CLIENT_ORIGIN=$CLIENT_ORIGIN
+    networks:
+      - backend
+      - frontend
+
+  react-jwt-auth:
+    depends_on:
+      - node-js-jwt-auth
+    build:
+      context: ./react-jwt-auth
+      args:
+        - REACT_APP_API_BASE_URL=$CLIENT_API_BASE_URL
+    ports:
+      - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
+    networks:
+      - frontend  
+
+networks:
+  backend:
+  frontend:
