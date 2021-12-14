@@ -1,0 +1,19 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+      {
+        "name": "react-jwt-auth",
+        "image": "cyberlkhome/dkr-multicontainer-app-react-jwt-auth",
+        "hostname": "react-jwt-auth",
+        "essential": false,
+        "memory": 300
+      },
+      {
+        "name": "node-js-jwt-auth",
+        "image": "cyberlkhome/dkr-multicontainer-app-node-js-jwt-auth",
+        "hostname": "node-js-jwt-auth",
+        "essential": false,
+        "memory": 300
+      }
+    ]
+}

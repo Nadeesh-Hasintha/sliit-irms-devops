@@ -12,6 +12,7 @@ services:
     networks:
       - backend
       - frontend
+    container_name: node-js-jwt-auth
 
   react-jwt-auth:
     depends_on:
@@ -23,7 +24,8 @@ services:
     ports:
       - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
     networks:
-      - frontend  
+      - frontend
+    container_name: react-jwt-auth
 
 networks:
   backend:

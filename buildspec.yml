@@ -1,0 +1,48 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+  pre_build:
+    commands:
+      # Install Snyk
+      - echo Install Snyk
+      - curl -Lo ./snyk "https://github.com/snyk/snyk/releases/download/v1.210.0/snyk-linux"
+      - chmod -R +x ./snyk
+      # Snyk auth
+      # - ./snyk config set api="$SNYK_AUTH_TOKEN"
+      # Build Docker image for testing
+      - echo Build react-jwt-auth and node-js-jwt-auth docker images for testing...
+      - docker build -t cyberlkhome/react-test -f ./react-jwt-auth/Dockerfile.dev ./react-jwt-auth
+      - docker build -t cyberlkhome/nodejs-test -f ./node-js-jwt-auth/Dockerfile.dev ./node-js-jwt-auth
+  build:
+    commands:
+      - echo Build started on `date`
+      # Run tests with built Docker images
+      - echo Run react tests...
+      - docker run -e CI=true cyberlkhome/react-test
+      - echo Run nodejs tests...
+      - docker run -e CI=true cyberlkhome/nodejs-test
+      # Scan Docker image with Snyk
+      ## react-jwt-auth
+      ## Run test for security vulernabilities
+      # - ./snyk test --severity-threshold=medium --docker cyberlkhome/react-test:latest --file=./react-jwt-auth/Dockerfile.dev
+      ## Setup continuous monitoring
+      # - ./snyk monitor --docker cyberlkhome/react-test:latest --file=./react-jwt-auth/Dockerfile.dev
+      ## node-js-jwt-auth
+      ## Run test for security vulernabilities
+      # - ./snyk test --severity-threshold=medium --docker cyberlkhome/nodejs-test:latest --file=./node-js-jwt-auth/Dockerfile.dev
+      ## Setup continuous monitoring
+      # - ./snyk monitor --docker cyberlkhome/nodejs-test:latest --file=./node-js-jwt-auth/Dockerfile.dev
+      # Build the Docker images
+      - echo Building the production Docker image...
+      - docker build -t cyberlkhome/dkr-multicontainer-app-react-jwt-auth ./react-jwt-auth
+      - docker build -t cyberlkhome/dkr-multicontainer-app-node-js-jwt-auth ./node-js-jwt-auth
+      # Log in to the Docker CLI
+      - echo "$DOCKER_PW" | docker login -u "$DOCKER_ID" --password-stdin
+  post_build:
+    commands:
+      # Take these images and push them to Docker hub
+      - echo Pushing the Docker images...
+      - docker push cyberlkhome/dkr-multicontainer-app-react-jwt-auth
+      - docker push cyberlkhome/dkr-multicontainer-app-node-js-jwt-auth
