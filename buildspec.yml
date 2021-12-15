@@ -4,8 +4,8 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the production Docker image...
-      - docker build -t cyberlkhome/react-jwt-auth .
-      - docker build -t cyberlkhome/node-js-jwt-auth .
+      - docker build -t cyberlkhome/react-jwt-auth .react-jwt-auth
+      - docker build -t cyberlkhome/node-js-jwt-auth .node-js-jwt-auth
       - docker tag cyberlkhome/react-jwt-auth cyberlkhome/react-jwt-auth
       - docker tag cyberlkhome/node-js-jwt-auth cyberlkhome/node-js-jwt-auth
       # Log in to the Docker CLI
